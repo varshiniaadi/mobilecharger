@@ -1,0 +1,194 @@
+// fizzy logic to find node weights
+import numpy as np
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
+
+%matplotlib inline
+# Antecedents
+rt = ctrl.Antecedent(np.arange(0, 20), 'request_time')
+dist = ctrl.Antecedent(np.arange(0, 50), 'distance')    
+pr = ctrl.Antecedent(np.arange(0, 100), 'priority')   
+
+# Consequents
+nw = ctrl.Consequent(np.arange(0, 100), 'node_weight')
+
+#request time
+rt['low'] = fuzz.trimf(rt.universe, [0, 0, 10])
+rt['medium'] = fuzz.trimf(rt.universe, [0, 10, 20])
+rt['high'] = fuzz.trimf(rt.universe, [10,20,20])
+#distance
+dist['near'] = fuzz.trimf(dist.universe, [0, 0, 25])
+dist['middle'] = fuzz.trimf(dist.universe, [0, 25, 50])
+dist['far'] = fuzz.trimf(dist.universe, [25,50,50])
+#priority
+pr['low'] = fuzz.trimf(pr.universe, [0, 0, 50])
+pr['medium'] = fuzz.trimf(pr.universe, [0, 50, 100])
+pr['high'] = fuzz.trimf(pr.universe, [50,100,100])
+#node weight
+nw['l'] = fuzz.trimf(nw.universe, [0, 0, 50])
+nw['m'] = fuzz.trimf(nw.universe, [0, 50, 100])
+nw['h'] = fuzz.trimf(nw.universe, [50,100,100])
+
+# Rule system
+
+rule1 = ctrl.Rule(pr['high']& rt['low']& dist['near'] ,nw['h'])
+rule2 = ctrl.Rule(pr['high']& rt['low']& dist['middle'] ,nw['h'])
+rule3 = ctrl.Rule(pr['high']& rt['low']& dist['far'] ,nw['m'])
+rule4 = ctrl.Rule(pr['high']& rt['medium']& dist['near'] ,nw['h'])
+rule5 = ctrl.Rule(pr['high']& rt['medium']& dist['middle'] ,nw['m'])
+rule6 = ctrl.Rule(pr['high']& rt['medium']& dist['far'] ,nw['m'])
+rule7 = ctrl.Rule(pr['high']& rt['high']& dist['near'] ,nw['h'])
+rule8 = ctrl.Rule(pr['high']& rt['high']& dist['middle'] ,nw['m'])
+rule9 = ctrl.Rule(pr['high']& rt['high']& dist['far'] ,nw['l'])
+
+rule10 = ctrl.Rule(pr['medium']& rt['low']& dist['near'] ,nw['h'])
+rule11 = ctrl.Rule(pr['medium']& rt['low']& dist['middle'] ,nw['m'])
+rule12 = ctrl.Rule(pr['medium']& rt['low']& dist['far'] ,nw['m'])
+rule13 = ctrl.Rule(pr['medium']& rt['medium']& dist['near'] ,nw['h'])
+rule14 = ctrl.Rule(pr['medium']& rt['medium']& dist['middle'] ,nw['h'])
+rule15 = ctrl.Rule(pr['medium']& rt['medium']& dist['far'] ,nw['m'])
+rule16 = ctrl.Rule(pr['medium']& rt['high']& dist['near'] ,nw['h'])
+rule17 = ctrl.Rule(pr['medium']& rt['high']& dist['middle'] ,nw['m'])
+rule18 = ctrl.Rule(pr['medium']& rt['high']& dist['far'] ,nw['l'])
+
+rule19 = ctrl.Rule(pr['low']& rt['low']& dist['near'] ,nw['m'])
+rule20 = ctrl.Rule(pr['low']& rt['low']& dist['middle'] ,nw['m'])
+rule21= ctrl.Rule(pr['low']& rt['low']& dist['far'] ,nw['l'])
+rule22 = ctrl.Rule(pr['low']& rt['medium']& dist['near'] ,nw['m'])
+rule23 = ctrl.Rule(pr['low']& rt['medium']& dist['middle'] ,nw['m'])
+rule24 = ctrl.Rule(pr['low']& rt['medium']& dist['far'] ,nw['l'])
+rule25 = ctrl.Rule(pr['low']& rt['high']& dist['near'] ,nw['m'])
+rule26 = ctrl.Rule(pr['low']& rt['high']& dist['middle'] ,nw['l'])
+rule27 = ctrl.Rule(pr['low']& rt['high']& dist['far'] ,nw['l'])
+
+# Control System Creation & Simulation
+nw_ctrl = ctrl.ControlSystem([rule1, rule2,rule3,rule4,rule5,rule6,rule7, rule8,rule9,rule10,rule11,rule12,rule13, rule14,rule15,rule16,rule17,rule18,
+                              rule19, rule20,rule21,rule22,rule23,rule24,rule25, rule26,rule27])
+nw_output = ctrl.ControlSystemSimulation(nw_ctrl)
+
+# Enter values to test
+
+distance = float(input("distance limit:0-50"))
+
+while distance < 0 or distance > 50:
+    try:
+       distance = float(input("Please choose a number between 0 & 50 "))
+    except ValueError:
+        print('We expect you to enter a valid integer')
+
+request_time = float(input("Enter request_time:0-20"))
+
+while request_time < 0 or request_time > 20:
+    try:
+        request_time = float(input("Please choose a number between 0 & 20 "))
+    except ValueError:
+        print('We expect you to enter a valid integer')
+priority = float(input("Enter priority:0-100"))
+
+while priority < 0 or priority > 100:
+    try:
+        priority = float(input("Please choose a number between 0 & 100 "))
+    except ValueError:
+        print('We expect you to enter a valid integer')
+
+nw_output.input['distance'] =distance
+nw_output.input['request_time'] = request_time
+nw_output.input['priority'] = priority
+
+nw_output.compute()
+
+
+//algorithm for ubiguitous path
+
+import numpy as np
+import pandas as pd
+import random
+rewards = np.array([ 
+                   
+                    [-1,30,-1,0,-1,-1,-1,-1,-1],
+                    [0,-1,0,-1,60,-1,-1,-1,-1],
+                    [-1,30,-1,-1,-1,80,-1,-1,-1],
+                    [0,-1,-1,-1,60,-1,90,-1,-1],
+                    [-1,30,-1,0,-1,80,-1,70,-1],
+                    [-1,-1,0,-1,60,-1,-1,0,99],
+                    [-1,-1,-1,0,-1,-1,-1,70,-1],
+                    [-1,-1,-1,-1,60,-1,90,-1,99],
+                  [-1,-1,-1,-1,-1,80,-1,70,-1] 
+
+
+                   
+
+])
+pd.DataFrame(rewards)
+def initialize_q(m,n):
+  return np.zeros((m,n))
+
+q_matrix=  initialize_q(9,9)
+pd.DataFrame(q_matrix)
+def set_initial_state(rooms=9):
+  return np.random.randint(0,rooms)
+
+def get_action(current_state, reward_matrix):
+  valid_actions=[]
+  for action in enumerate(reward_matrix[current_state]):
+    if action[1]!=-1:
+      valid_actions+=[action[0]]
+  return random.choice(valid_actions)
+
+def take_action(current_state, reward_matrix, gamma,verbose=False):
+  action=get_action(current_state, reward_matrix)
+  sa_reward=reward_matrix[current_state,action]
+  ns_reward=max(q_matrix[action,])
+  q_current_state=sa_reward+(gamma * ns_reward)
+  q_matrix[current_state,action]=q_current_state
+  new_state=action
+  if verbose:
+    print(q_matrix)
+    print(f"Old State:{current_state}| New Training:{new_state}\n\n")
+    if new_state == 8:                      
+      print(f"Agent has reached it's goal!")
+  return new_state
+
+def initialize_episode(reward_matrix, initial_state, gamma,verbose=False):
+  current_state=initial_state
+  while True:
+    current_state=take_action(current_state,reward_matrix, gamma,verbose)
+    if current_state == 8:
+      break
+
+def train_agent(iterations, reward_matrix,gamma,verbose=False):
+  print("Training in progress")
+  for episode in range(iterations):
+    initial_state=set_initial_state()
+    initialize_episode(reward_matrix, initial_state,gamma, verbose)
+  print("Training Completed")
+  return q_matrix
+
+def normalize_matrix(q_matrix):
+  normalized_q=q_matrix/max(q_matrix[q_matrix.nonzero()])*100
+  return normalized_q.astype(int)
+  gamma = 0.1
+initial_state= 0
+initial_action=get_action(initial_state,rewards)
+initialize_episode(rewards,initial_state,gamma, True)
+gamma=0.5
+initial_state=set_initial_state()
+initial_action=get_action(initial_state, rewards)
+q_table=train_agent(2000, rewards,gamma, False)
+pd.DataFrame(q_table)
+pd.DataFrame(normalize_matrix(q_table))
+def deploy_agent(init_state, q_table):
+  print("Start:",init_state)
+  state=init_state
+  steps=0
+  while True:
+    steps+=1
+    action=np.argmax(q_table[state,:])
+    print(action)
+    state=action
+    if action==8:
+      print("Finished!")
+      return steps
+	   start_room=0;
+steps=deploy_agent(start_room,q_table)
+print("Number of rooms/ actions",steps)
